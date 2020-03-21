@@ -1,9 +1,9 @@
 ﻿// Learn more about F# at http://fsharp.org
 
+open Suave.Combinators
 open Suave.Console
 open Suave.Http
 open Suave.Successful
-open Suave.Combinators
 
 [<EntryPoint>]
 let main argv =
@@ -19,5 +19,5 @@ let main argv =
     { Request = request
       Response = response }
 
-  executeInLoop context ( (OK "hello") >=> (OK "world") >=> (OK "foo"))
+  executeInLoop context ((OK "hello") >=> (OK "world") >=> (OK "foo"))
   0
