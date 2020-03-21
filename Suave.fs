@@ -96,7 +96,18 @@ module Filters =
       |> async.Return
     else
       None |> async.Return
-      
-  let GET = iif (fun context -> context.Request.Type = GET)
-  let POST = iif (fun context -> context.Request.Type = POST)
+
+  let Get = iif (fun context -> context.Request.Type = GET)
+  let Post = iif (fun context -> context.Request.Type = POST)
   let Path path = iif (fun context -> context.Request.Route = path)
+
+  let rec Choose webParts context =
+    async {
+      match webParts with
+      | [] -> return None
+      | x :: xs ->
+          let! result = x context
+          match result with
+          | Some r -> return Some r
+          | None -> return! Choose xs context
+    }

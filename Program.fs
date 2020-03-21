@@ -2,15 +2,15 @@
 
 open Suave.Combinators
 open Suave.Console
+open Suave.Filters
 open Suave.Http
 open Suave.Successful
-open Suave.Filters
 
 [<EntryPoint>]
 let main argv =
   let request =
     { Route = ""
-      Type = Suave.Http.GET }
+      Type = GET }
 
   let response =
     { Content = ""
@@ -20,5 +20,13 @@ let main argv =
     { Request = request
       Response = response }
 
-  executeInLoop context (GET >=> Path "/hello" >=> OK "hello")
+  let app =
+    Choose
+      [ Get >=> Path "/hello" >=> OK "Hello GET"
+        Post >=> Path "/hello" >=> OK "Hello POST"
+        Path "/foo" >=> Choose
+                          [ Get >=> OK "Foo GET"
+                            Post >=> OK "Foo POST" ] ]
+
+  executeInLoop context app
   0
