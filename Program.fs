@@ -3,6 +3,7 @@
 open Suave.Console
 open Suave.Http
 open Suave.Successful
+open Suave.Combinators
 
 [<EntryPoint>]
 let main argv =
@@ -18,5 +19,5 @@ let main argv =
     { Request = request
       Response = response }
 
-  executeInLoop context (OK "Hello Suave!")
+  executeInLoop context ( (OK "hello") >=> (OK "world") >=> (OK "foo"))
   0
