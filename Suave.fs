@@ -85,3 +85,18 @@ module Combinators =
     }
 
   let (>=>) = compose
+
+module Filters =
+  open Http
+
+  let iif condition context =
+    if condition context then
+      context
+      |> Some
+      |> async.Return
+    else
+      None |> async.Return
+      
+  let GET = iif (fun context -> context.Request.Type = GET)
+  let POST = iif (fun context -> context.Request.Type = POST)
+  let Path path = iif (fun context -> context.Request.Route = path)
